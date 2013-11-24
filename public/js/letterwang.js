@@ -21,8 +21,9 @@ $(function() {
   socket = io.connect();
 
   socket.on('players', function(count) {
-    $('#player-count').text(count);
-    $('#player-counts').text(count == 1 ? '' : 's'); 
+    $('#player-count').addClass('in');
+    $('#players').text(count);
+    $('#playerss').text(count == 1 ? '' : 's');
   });
 
   socket.on('id', function(id) {
