@@ -1,10 +1,54 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Letterwang</title>
+    <title>Letterwang!</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/css/letterwang.css">
   </head>
   <body>
+    <div id="wrapper">
+      <div id="cell" class="tab-content">
+        <div id="wait" class="tab-pane fade active in">
+          <h1><i class="fa fa-spin fa-spinner"></i></h1>
+          <h2 id="wait-message">
+            Connecting...
+          </h2>
+          <h3 id="wait-link" class="hidden">
+            Send your friend to <a target="_blank"></a>
+          </h3>
+        </div>
+
+        <div id="error" class="tab-pane fade">
+          <div class="container">
+            <div class="alert alert-danger">
+              <h1 id="error-message"></h1>
+            </div>
+          </div>
+        </div>
+
+        <div id="main" class="tab-pane fade">
+          <h1>Letterwang!</h1>
+          <p class="lead">
+            Take turns typing letters. Complete a word to score points.
+          </p>
+
+          <p>
+          <button type="button" id="play-anyone" class="btn btn-lg btn-primary">
+            <i class="fa fa-globe"></i> Play with anyone
+          </button>
+          <p>
+          <button type="button" id="play-friend" class="btn btn-lg btn-primary">
+            <i class="fa fa-user"></i> Play with a friend
+          </button>
+        </div>
+      </div>
+    </div>
+
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.1/js/bootstrap.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     <script src="/js/letterwang.js"></script>
   </body>

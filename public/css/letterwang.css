@@ -1,0 +1,12 @@
+div#wrapper {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  text-align: center;
+  display: table;
+}
+
+div#cell {
+  display: table-cell;
+  vertical-align: middle;
+}
