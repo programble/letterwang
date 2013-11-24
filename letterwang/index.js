@@ -12,7 +12,7 @@ app.get('/', function(req, res) {
 
 var nextId = 10000000,
     players = {},
-    randomPool = [];
+    waitingPlayer;
 
 function pairPlayers(player1, player2) {
   player1.opponent = player2;
@@ -27,11 +27,12 @@ io.sockets.on('connection', function(socket) {
   players[player.id] = player;
   socket.emit('id', player.id);
 
-  socket.on('play random', function() {
-    if (randomPool.length) {
-      pairPlayers(player, randomPool.shift());
+  socket.on('play', function() {
+    if (waitingPlayer) {
+      pairPlayers(player, waitingPlayer);
+      waitingPlayer = null;
     } else {
-      randomPool.push(player);
+      waitingPlayer = player;
     }
   });
 
