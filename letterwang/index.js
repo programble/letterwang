@@ -17,16 +17,17 @@ var nextId = 10000000,
 function pairPlayers(player1, player2) {
   player1.opponent = player2;
   player2.opponent = player1;
-  player1.emit('opponent', player2.id);
-  player2.emit('opponent', player1.id);
+  player1.socket.emit('opponent', player2.id);
+  player2.socket.emit('opponent', player1.id);
 }
 
-io.sockets.on('connection', function(player) {
-  player.id = nextId.toString(36);
+io.sockets.on('connection', function(socket) {
+  var player = {socket: socket, id: nextId.toString(36)};
   nextId++;
-  players[id] = player;
+  players[player.id] = player;
+  socket.emit('id', player.id);
 
-  player.on('play random', function() {
+  socket.on('play random', function() {
     if (randomPool.length) {
       pairPlayers(player, randomPool.shift());
     } else {
@@ -34,11 +35,15 @@ io.sockets.on('connection', function(player) {
     }
   });
 
-  player.on('play id', function(id, fn) {
-    if (opponent = players[id]) {
+  socket.on('play id', function(id, fn) {
+    var opponent = players[id];
+
+    if (opponent == player) {
+      if (fn) fn('You cannot play yourself');
+    } else if (opponent) {
       pairPlayers(player, opponent);
     } else {
-      fn('Player not found');
+      if (fn) fn('Player not found');
     }
   });
 });
