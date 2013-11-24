@@ -30,6 +30,8 @@ io.sockets.on('connection', function(socket) {
   socket.on('play', function(fn) {
     if (player.opponent) {
       if (fn) fn('You already have an opponent');
+    } else if (waitingPlayer == player) {
+      if (fn) fn('You are already waiting for a player');
     } else if (waitingPlayer) {
       pairPlayers(player, waitingPlayer);
       waitingPlayer = null;
