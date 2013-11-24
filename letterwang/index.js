@@ -47,6 +47,12 @@ io.sockets.on('connection', function(socket) {
       if (fn) fn('Player not found');
     }
   });
+
+  socket.on('disconnect', function() {
+    if (waitingPlayer == player)
+      waitingPlayer = null;
+    // TODO: Handle leaving a game
+  });
 });
 
 module.exports = server;
