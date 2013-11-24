@@ -15,7 +15,7 @@ function showError(message) {
   return showTab('error');
 }
 
-var socket, playerId, playCancel;
+var socket, playerId;
 
 $(function() {
   socket = io.connect();
@@ -42,17 +42,16 @@ $(function() {
   $('#play-anyone').click(function() {
     socket.emit('play', showError);
     showWait('Waiting for player...', true);
-    playCancel = true;
   });
 
   $('#play-friend').click(function() {
+    socket.emit('play friend', showError);
     var friendUrl = window.location.href.split('#')[0] + '#' + playerId;
     showWait('Waiting for player...', true, friendUrl);
-    playCancel = false;
   });
 
   $('#wait-cancel').click(function() {
-    if (playCancel) socket.emit('play cancel', showError);
+    socket.emit('play cancel', showError);
     showTab('main');
   })
 

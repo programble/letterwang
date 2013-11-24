@@ -41,9 +41,21 @@ io.sockets.on('connection', function(socket) {
     }
   });
 
+  socket.on('play friend', function(fn) {
+    if (player.opponent) {
+      if (fn) fn('You already have an opponent');
+    } else if (waitingPlayer == player) {
+      if (fn) fn('You are already waiting for a player');
+    } else {
+      player.waitingForFriend = true;
+    }
+  });
+
   socket.on('play cancel', function(fn) {
     if (waitingPlayer == player) {
       waitingPlayer = null;
+    } else if (player.waitingForFriend) {
+      player.waitingForFriend = false;
     } else {
       if (fn) fn('You are not waiting to play');
     }
@@ -57,8 +69,11 @@ io.sockets.on('connection', function(socket) {
       if (fn) fn('You cannot play yourself');
     } else if (opponent && opponent.opponent) {
       if (fn) fn('Player already has an opponent');
-    } else if (opponent) {
+    } else if (opponent && opponent.waitingForFriend) {
+      player.waitingForFriend = false;
       pairPlayers(player, opponent);
+    } else if (opponent) {
+      if (fn) fn('Player is not waiting for a friend');
     } else {
       if (fn) fn('Player not found');
     }
