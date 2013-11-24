@@ -41,6 +41,8 @@ io.sockets.on('connection', function(socket) {
 
     if (opponent == player) {
       if (fn) fn('You cannot play yourself');
+    } else if (opponent.opponent) {
+      if (fn) fn('Player already has an opponent');
     } else if (opponent) {
       pairPlayers(player, opponent);
     } else {
