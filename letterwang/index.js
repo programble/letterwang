@@ -27,8 +27,10 @@ io.sockets.on('connection', function(socket) {
   players[player.id] = player;
   socket.emit('id', player.id);
 
-  socket.on('play', function() {
-    if (waitingPlayer) {
+  socket.on('play', function(fn) {
+    if (player.opponent) {
+      if (fn) fn('You already have an opponent');
+    } else if (waitingPlayer) {
       pairPlayers(player, waitingPlayer);
       waitingPlayer = null;
     } else {
@@ -38,10 +40,11 @@ io.sockets.on('connection', function(socket) {
 
   socket.on('play id', function(id, fn) {
     var opponent = players[id];
-
-    if (opponent == player) {
+    if (player.opponent) {
+      if (fn) fn('You already have an opponent');
+    } else if (opponent == player) {
       if (fn) fn('You cannot play yourself');
-    } else if (opponent.opponent) {
+    } else if (opponent && opponent.opponent) {
       if (fn) fn('Player already has an opponent');
     } else if (opponent) {
       pairPlayers(player, opponent);
@@ -53,7 +56,10 @@ io.sockets.on('connection', function(socket) {
   socket.on('disconnect', function() {
     if (waitingPlayer == player)
       waitingPlayer = null;
-    // TODO: Handle leaving a game
+    if (player.opponent) {
+      player.opponent.socket.emit('opponent left');
+      player.opponent.opponent = null;
+    }
   });
 });
 

@@ -36,7 +36,9 @@ $(function() {
   });
 
   $('#play-anyone').click(function() {
-    socket.emit('play');
+    socket.emit('play', function(err) {
+      showError(err);
+    });
     showWait('Waiting for player...');
   });
 
@@ -48,5 +50,9 @@ $(function() {
   socket.on('opponent id', function(id) {
     console.log('Opponent ID ' + id);
     showWait('Player found: ' + id); // TODO: Start game
+  });
+
+  socket.on('opponent left', function() {
+    showError('Your opponent left the game');
   });
 });
