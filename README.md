@@ -4,11 +4,10 @@ Competitive word-spelling game.
 
 ## Rules
 
-Two players are paired randomly and cannot communicate during gameplay.
-Players take turns adding letters to the end of the letter stream. Each
-time a player adds a letter that causes a word to be spelled at the end
-of the stream, they are awarded points corresponding to the length of
-the word spelled.
+Two players take turns adding letters to the end of the letter stream.
+Each time a player adds a letter that causes a word to be spelled at the
+end of the stream, they are awarded points corresponding to the length
+of the word spelled.
 
 ### Example
 
