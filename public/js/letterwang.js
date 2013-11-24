@@ -7,7 +7,7 @@ $(function() {
     console.log('Player ID ' + id);
   });
 
-  socket.on('opponent', function(id) {
+  socket.on('opponent id', function(id) {
     console.log('Opponent ID ' + id);
   });
 });

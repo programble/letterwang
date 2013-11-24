@@ -17,8 +17,8 @@ var nextId = 10000000,
 function pairPlayers(player1, player2) {
   player1.opponent = player2;
   player2.opponent = player1;
-  player1.socket.emit('opponent', player2.id);
-  player2.socket.emit('opponent', player1.id);
+  player1.socket.emit('opponent id', player2.id);
+  player2.socket.emit('opponent id', player1.id);
 }
 
 io.sockets.on('connection', function(socket) {
