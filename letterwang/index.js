@@ -38,6 +38,14 @@ io.sockets.on('connection', function(socket) {
     }
   });
 
+  socket.on('play cancel', function(fn) {
+    if (waitingPlayer == player) {
+      waitingPlayer = null;
+    } else {
+      if (fn) fn('You are not waiting to play');
+    }
+  });
+
   socket.on('play id', function(id, fn) {
     var opponent = players[id];
     if (player.opponent) {
