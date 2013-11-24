@@ -55,4 +55,8 @@ $(function() {
   socket.on('opponent left', function() {
     showError('Your opponent left the game');
   });
+
+  $('#play-again').click(function() {
+    showTab('main');
+  });
 });
