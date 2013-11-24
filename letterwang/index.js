@@ -25,6 +25,7 @@ io.sockets.on('connection', function(socket) {
   var player = {socket: socket, id: nextId.toString(36)};
   nextId++;
   players[player.id] = player;
+  io.sockets.emit('players', Object.keys(players).length);
   socket.emit('id', player.id);
 
   socket.on('play', function(fn) {
@@ -71,6 +72,7 @@ io.sockets.on('connection', function(socket) {
       player.opponent.opponent = null;
     }
     delete players[player.id];
+    io.sockets.emit('players', Object.keys(players).length);
   });
 });
 

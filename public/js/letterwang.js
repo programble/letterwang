@@ -20,6 +20,11 @@ var socket, playerId, playCancel;
 $(function() {
   socket = io.connect();
 
+  socket.on('players', function(count) {
+    $('#player-count').text(count);
+    $('#player-counts').text(count == 1 ? '' : 's'); 
+  });
+
   socket.on('id', function(id) {
     playerId = id;
     console.log('Player ID ' + id);
