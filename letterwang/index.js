@@ -70,6 +70,7 @@ io.sockets.on('connection', function(socket) {
       player.opponent.socket.emit('opponent left');
       player.opponent.opponent = null;
     }
+    delete players[player.id];
   });
 });
 
