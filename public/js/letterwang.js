@@ -67,4 +67,13 @@ $(function() {
   $('#play-again').click(function() {
     showTab('menu');
   });
+
+  socket.on('reconnecting', function() {
+    showWait('Reconnecting...');
+  });
+
+  socket.on('connect_failed', function() {
+    showError('Connection failed');
+    $('#play-again').hide();
+  });
 });
