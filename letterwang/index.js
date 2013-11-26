@@ -10,41 +10,54 @@ app.get('/', function(req, res) {
   res.sendfile(path.normalize(__dirname + '/../public/index.html'));
 });
 
-var nextId = 10000000,
-    players = {},
-    waitingPlayer;
+function Player(socket) {
+  this.socket = socket;
+  this.id = Player.nextId.toString(36);
+  Player.nextId++;
+  Player.players[this.id] = this;
+  Player.emitCount();
+  socket.emit('id', this.id);
+}
 
-function pairPlayers(player1, player2) {
-  player1.opponent = player2;
-  player2.opponent = player1;
-  player1.socket.emit('opponent id', player2.id);
-  player2.socket.emit('opponent id', player1.id);
+Player.nextId = 10000000;
+Player.players = {};
+
+Player.emitCount = function() {
+  io.sockets.emit('players', Object.keys(Player.players).length);
+}
+
+Player.prototype.remove = function() {
+  delete Player.players[this.id];
+  Player.emitCount();
+}
+
+Player.prototype.pair = function(other) {
+  this.opponent = other;
+  other.opponent = this;
+  this.socket.emit('opponent id', other.id);
+  other.socket.emit('opponent id', this.id);
 }
 
 io.sockets.on('connection', function(socket) {
-  var player = {socket: socket, id: nextId.toString(36)};
-  nextId++;
-  players[player.id] = player;
-  io.sockets.emit('players', Object.keys(players).length);
-  socket.emit('id', player.id);
+  var player = new Player(socket);
 
   socket.on('play', function(fn) {
     if (player.opponent) {
       if (fn) fn('You already have an opponent');
-    } else if (waitingPlayer == player) {
+    } else if (Player.waiting == player) {
       if (fn) fn('You are already waiting for a player');
-    } else if (waitingPlayer) {
-      pairPlayers(player, waitingPlayer);
-      waitingPlayer = null;
+    } else if (Player.waiting) {
+      player.pair(Player.waiting);
+      Player.waiting = null;
     } else {
-      waitingPlayer = player;
+      Player.waiting = player;
     }
   });
 
   socket.on('play friend', function(fn) {
     if (player.opponent) {
       if (fn) fn('You already have an opponent');
-    } else if (waitingPlayer == player) {
+    } else if (Player.waiting == player) {
       if (fn) fn('You are already waiting for a player');
     } else {
       player.waitingForFriend = true;
@@ -52,8 +65,8 @@ io.sockets.on('connection', function(socket) {
   });
 
   socket.on('play cancel', function(fn) {
-    if (waitingPlayer == player) {
-      waitingPlayer = null;
+    if (Player.waiting == player) {
+      Player.waiting = null;
     } else if (player.waitingForFriend) {
       player.waitingForFriend = false;
     } else {
@@ -62,7 +75,7 @@ io.sockets.on('connection', function(socket) {
   });
 
   socket.on('play id', function(id, fn) {
-    var opponent = players[id];
+    var opponent = Player.players[id];
     if (player.opponent) {
       if (fn) fn('You already have an opponent');
     } else if (opponent == player) {
@@ -71,7 +84,7 @@ io.sockets.on('connection', function(socket) {
       if (fn) fn('Player already has an opponent');
     } else if (opponent && opponent.waitingForFriend) {
       player.waitingForFriend = false;
-      pairPlayers(player, opponent);
+      player.pair(opponent);
     } else if (opponent) {
       if (fn) fn('Player is not waiting for a friend');
     } else {
@@ -80,14 +93,13 @@ io.sockets.on('connection', function(socket) {
   });
 
   socket.on('disconnect', function() {
-    if (waitingPlayer == player)
-      waitingPlayer = null;
+    if (Player.waiting == player)
+      Player.waiting = null;
     if (player.opponent) {
       player.opponent.socket.emit('opponent left');
       player.opponent.opponent = null;
     }
-    delete players[player.id];
-    io.sockets.emit('players', Object.keys(players).length);
+    player.remove();
   });
 });
 
