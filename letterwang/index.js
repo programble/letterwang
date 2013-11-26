@@ -4,10 +4,21 @@ var path    = require('path'),
     server  = require('http').createServer(app),
     io      = require('socket.io').listen(server);
 
-app.use(express.logger());
+app.configure('production', function() {
+  app.use(express.logger());
+});
+
 app.use(express.static(path.normalize(__dirname + '/../public')));
 app.get('/', function(req, res) {
   res.sendfile(path.normalize(__dirname + '/../public/index.html'));
+});
+
+io.configure('production', function() {
+  io.enable('browser client minification');
+  io.enable('browser client etag');
+  io.enable('browser client gzip');
+
+  io.set('log level', 1);
 });
 
 function Player(socket) {
