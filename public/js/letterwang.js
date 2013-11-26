@@ -35,7 +35,7 @@ $(function() {
       showWait('Waiting for player...');
       window.location.hash = '';
     } else {
-      showTab('main');
+      showTab('menu');
     }
   });
 
@@ -52,7 +52,7 @@ $(function() {
 
   $('#wait-cancel').click(function() {
     socket.emit('play cancel', showError);
-    showTab('main');
+    showTab('menu');
   })
 
   socket.on('opponent id', function(id) {
@@ -65,6 +65,6 @@ $(function() {
   });
 
   $('#play-again').click(function() {
-    showTab('main');
+    showTab('menu');
   });
 });
