@@ -4,9 +4,9 @@ var path    = require('path'),
     server  = require('http').createServer(app),
     io      = require('socket.io').listen(server);
 
-app.configure('production', function() {
+if (app.get('env') != 'production') {
   app.use(express.logger());
-});
+}
 
 app.use(express.static(path.normalize(__dirname + '/../public')));
 app.get('/', function(req, res) {
