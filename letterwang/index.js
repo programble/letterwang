@@ -21,9 +21,11 @@ io.configure('production', function() {
   io.set('log level', 1);
 });
 
-function callback(fn) {
-  if (typeof fn == 'function')
-    fn(Array.prototype.slice.call(arguments, 1));
+function safe(fn) {
+  return function() {
+    if (typeof fn == 'function')
+      fn.apply(this, arguments);
+  }
 }
 
 function Player(socket) {
@@ -42,87 +44,111 @@ Player.emitCount = function() {
   io.sockets.emit('players', Object.keys(Player.players).length);
 }
 
-Player.prototype.remove = function() {
-  delete Player.players[this.id];
-  Player.emitCount();
-}
+Player.prototype = {
+  remove: function() {
+    if (Player.waiting == this)
+      Player.waiting = null;
+    if (this.opponent) {
+      this.opponent.socket.emit('opponent left');
+      this.opponent.opponent = null;
+    }
+    delete Player.players[this.id];
+    Player.emitCount();
+  },
 
-Player.prototype.pair = function(other) {
-  this.opponent = other;
-  other.opponent = this;
-  this.socket.emit('opponent id', other.id);
-  other.socket.emit('opponent id', this.id);
+  play: function(fn) {
+    if (this.opponent) {
+      fn('You already have an opponent');
+    } else if (Player.waiting && Player.waiting != this) {
+      this.pair(Player.waiting);
+      Player.waiting = null;
+    } else {
+      Player.waiting = this;
+    }
+  },
+
+  playFriend: function(fn) {
+    if (this.opponent)
+      fn('You already have an opponent');
+    else if (Player.waiting == this)
+      fn('You are already waiting for a player');
+    else
+      this.waitingForFriend = true;
+  },
+
+  playCancel: function(fn) {
+    if (Player.waiting == this)
+      Player.waiting = null;
+    else if (this.waitingForFriend)
+      this.waitingForFriend = false;
+    else
+      fn('You are not waiting to play');
+  },
+
+  playId: function(id, fn) {
+    var other = Player.players[id];
+    if (this.opponent) {
+      fn('You already have an opponent');
+    } else if (other == this) {
+      fn('You cannot play yourself');
+    } else if (other && other.opponent) {
+      fn('Player already has an opponent');
+    } else if (other && other.waitingForFriend) {
+      other.waitingForFriend = false;
+      this.pair(other);
+    } else if (other) {
+      fn('Player is not waiting for a friend');
+    } else {
+      fn('Player not found');
+    }
+  },
+
+  pair: function(other) {
+    this.opponent = other;
+    other.opponent = this;
+    this.socket.emit('opponent id', other.id);
+    other.socket.emit('opponent id', this.id);
+
+    this.letters = other.letters = [];
+    this.emitLetters();
+
+    this.score = 0;
+    other.score = 0;
+    this.emitScore();
+    other.emitScore();
+  },
+
+  emitLetters: function() {
+    this.socket.emit('letters', this.letters);
+    this.opponent.socket.emit('letters', this.letters);
+  },
+
+  emitScore: function(word) {
+    this.socket.emit('score', this.score, word);
+    this.opponent.socket.emit('score', this.score, word);
+  }
 }
 
 io.sockets.on('connection', function(socket) {
   var player = new Player(socket);
 
   socket.on('play', function(fn) {
-    if (player.opponent) {
-      callback(fn, 'You already have an opponent');
-    } else if (Player.waiting != player) {
-      player.pair(Player.waiting);
-      Player.waiting = null;
-    } else {
-      Player.waiting = player;
-    }
+    player.play(safe(fn));
   });
 
   socket.on('play friend', function(fn) {
-    if (player.opponent) {
-      callback(fn, 'You already have an opponent');
-    } else if (Player.waiting == player) {
-      callback(fn, 'You are already waiting for a player');
-    } else {
-      player.waitingForFriend = true;
-    }
+    player.playFriend(safe(fn));
   });
 
   socket.on('play cancel', function(fn) {
-    if (Player.waiting == player) {
-      Player.waiting = null;
-    } else if (player.waitingForFriend) {
-      player.waitingForFriend = false;
-    } else {
-      callback(fn, 'You are not waiting to play');
-    }
+    player.playCancel(safe(fn));
   });
 
   socket.on('play id', function(id, fn) {
-    var opponent = Player.players[id];
-    if (player.opponent) {
-      callback(fn, 'You already have an opponent');
-    } else if (opponent == player) {
-      callback(fn, 'You cannot play yourself');
-    } else if (opponent && opponent.opponent) {
-      callback(fn, 'Player already has an opponent');
-    } else if (opponent && opponent.waitingForFriend) {
-      player.waitingForFriend = false;
-      player.pair(opponent);
-    } else if (opponent) {
-      callback(fn, 'Player is not waiting for a friend');
-    } else {
-      callback(fn, 'Player not found');
-    }
-  });
-
-  socket.on('type', function(letter, fn) {
-    if (letter < 'a' || letter > 'z') {
-      callback(fn, 'Invalid letter');
-    } else if (player.turn) {
-      player.letters.push(letter);
-    } else {
-      callback(fn, 'It is not your turn');
-    }
+    player.playId(id, safe(fn));
   });
 
   socket.on('disconnect', function() {
-    if (Player.waiting == player)
-      Player.waiting = null;
-    if (player.opponent) {
-      player.opponent.socket.emit('opponent left');
-      player.opponent.opponent = null;
-    }
     player.remove();
   });
 });
