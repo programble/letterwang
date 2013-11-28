@@ -60,9 +60,7 @@ io.sockets.on('connection', function(socket) {
   socket.on('play', function(fn) {
     if (player.opponent) {
       callback(fn, 'You already have an opponent');
-    } else if (Player.waiting == player) {
-      callback(fn, 'You are already waiting for a player');
-    } else if (Player.waiting) {
+    } else if (Player.waiting != player) {
       player.pair(Player.waiting);
       Player.waiting = null;
     } else {
