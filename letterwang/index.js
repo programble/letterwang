@@ -116,6 +116,10 @@ Player.prototype = {
     other.score = 0;
     this.emitScore();
     other.emitScore();
+
+    this.turn = true;
+    other.turn = false;
+    this.socket.emit('turn');
   },
 
   emitLetters: function() {
@@ -126,31 +130,35 @@ Player.prototype = {
   emitScore: function(word) {
     this.socket.emit('score', this.score, word);
     this.opponent.socket.emit('score', this.score, word);
+  },
+
+  type: function(letter, fn) {
+    if (!this.turn)
+      fn('It is not your turn');
+    else if (letter < 'a' || letter > 'z')
+      fn('Invalid letter');
+    else {
+      this.letters.push(letter);
+      this.letters = this.opponent.letters = this.letters.slice(-50);
+      this.emitLetters();
+
+      // TODO: Check for scoring
+
+      this.turn = false;
+      this.opponent.turn = true;
+      this.opponent.socket.emit('turn');
+    }
   }
 }
 
 io.sockets.on('connection', function(socket) {
   var player = new Player(socket);
-
-  socket.on('play', function(fn) {
-    player.play(safe(fn));
-  });
-
-  socket.on('play friend', function(fn) {
-    player.playFriend(safe(fn));
-  });
-
-  socket.on('play cancel', function(fn) {
-    player.playCancel(safe(fn));
-  });
-
-  socket.on('play id', function(id, fn) {
-    player.playId(id, safe(fn));
-  });
-
-  socket.on('disconnect', function() {
-    player.remove();
-  });
+  socket.on('play',        function(fn)     { player.play(safe(fn)); });
+  socket.on('play friend', function(fn)     { player.playFriend(safe(fn)); });
+  socket.on('play cancel', function(fn)     { player.playCancel(safe(fn)); });
+  socket.on('play id',     function(id, fn) { player.playId(id, safe(fn)); });
+  socket.on('type',        function(l, fn)  { player.type(l, safe(fn)); });
+  socket.on('disconnect',  function()       { player.remove(); });
 });
 
 module.exports = server;
