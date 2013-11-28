@@ -26,5 +26,6 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-cssmin');
   grunt.loadNpmTasks('grunt-contrib-uglify');
 
-  grunt.registerTask('default', ['jshint', 'cssmin', 'uglify']);
+  grunt.registerTask('default', 'jshint');
+  grunt.registerTask('heroku:production', ['cssmin', 'uglify']);
 };
