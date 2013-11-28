@@ -52,7 +52,7 @@ $(function() {
   $('#wait-cancel').click(function() {
     socket.emit('play cancel', showError);
     showTab('menu');
-  })
+  });
 
   socket.on('opponent id', function(id) {
     showWait('Player found: ' + id); // TODO: Start game
