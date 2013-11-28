@@ -13,6 +13,8 @@ if (app.get('env') != 'production') {
   app.get('/js/letterwang.min.js', function(req, res) {
     res.redirect('/js/letterwang.js');
   });
+} else {
+  app.use(express.compress());
 }
 
 app.use(express.static(path.normalize(__dirname + '/../public')));
