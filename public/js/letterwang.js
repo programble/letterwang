@@ -34,7 +34,7 @@ $(function() {
       showWait('Waiting for player...');
       window.location.hash = '';
     } else {
-      showTab('game');
+      showTab('menu');
     }
   });
 
