@@ -133,7 +133,9 @@ Player.prototype = {
   },
 
   type: function(letter, fn) {
-    if (!this.turn)
+    if (!this.opponent)
+      fn('You are not playing');
+    else if (!this.turn)
       fn('It is not your turn');
     else if (letter < 'a' || letter > 'z')
       fn('Invalid letter');
