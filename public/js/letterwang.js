@@ -28,14 +28,13 @@ $(function() {
 
   socket.on('id', function(id) {
     playerId = id;
-    console.log('Player ID ' + id);
     if (window.location.hash.slice(1)) {
       var friendId = window.location.hash.slice(1);
       socket.emit('play id', friendId, showError);
       showWait('Waiting for player...');
       window.location.hash = '';
     } else {
-      showTab('menu');
+      showTab('game');
     }
   });
 
@@ -56,7 +55,6 @@ $(function() {
   })
 
   socket.on('opponent id', function(id) {
-    console.log('Opponent ID ' + id);
     showWait('Player found: ' + id); // TODO: Start game
   });
 
