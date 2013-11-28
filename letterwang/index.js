@@ -137,7 +137,8 @@ Player.prototype = {
       fn('You are not playing');
     else if (!this.turn)
       fn('It is not your turn');
-    else if (letter < 'a' || letter > 'z')
+    else if (typeof letter != 'string' || letter.length != 1 ||
+             letter < 'a' || letter > 'z')
       fn('Invalid letter');
     else {
       this.letters.push(letter);
