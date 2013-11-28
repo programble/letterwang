@@ -32,7 +32,7 @@ function safe(fn) {
   return function() {
     if (typeof fn == 'function')
       fn.apply(this, arguments);
-  }
+  };
 }
 
 function Player(socket) {
@@ -49,7 +49,7 @@ Player.players = {};
 
 Player.emitCount = function() {
   io.sockets.emit('players', Object.keys(Player.players).length);
-}
+};
 
 Player.prototype = {
   remove: function() {
@@ -159,7 +159,7 @@ Player.prototype = {
       this.opponent.socket.emit('turn');
     }
   }
-}
+};
 
 io.sockets.on('connection', function(socket) {
   var player = new Player(socket);
