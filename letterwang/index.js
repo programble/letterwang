@@ -6,6 +6,13 @@ var path    = require('path'),
 
 if (app.get('env') != 'production') {
   app.use(express.logger());
+
+  app.get('/css/letterwang.min.css', function(req, res) {
+    res.redirect('/css/letterwang.css');
+  });
+  app.get('/js/letterwang.min.js', function(req, res) {
+    res.redirect('/js/letterwang.js');
+  });
 }
 
 app.use(express.static(path.normalize(__dirname + '/../public')));
