@@ -118,7 +118,7 @@ Player.prototype = {
     this.socket.emit('opponent id', other.id);
     other.socket.emit('opponent id', this.id);
 
-    this.letters = other.letters = [];
+    this.letters = other.letters = '';
     this.emitLetters();
 
     this.score = 0;
@@ -150,8 +150,8 @@ Player.prototype = {
              letter < 'a' || letter > 'z')
       fn('Invalid letter');
     else {
-      this.letters.push(letter);
-      this.letters = this.opponent.letters = this.letters.slice(-50);
+      this.letters = (this.letters + letter).slice(-50);
+      this.opponent.letters = this.letters;
       this.emitLetters();
 
       // TODO: Check for scoring
