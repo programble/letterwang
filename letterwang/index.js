@@ -19,7 +19,7 @@ if (app.get('env') != 'production') {
 
 app.use(express.static(path.normalize(__dirname + '/../public')));
 app.get('/', function(req, res) {
-  res.sendfile(path.normalize(__dirname + '/../public/index.html'));
+  res.sendfile(path.join(__dirname, '..', 'public', 'index.html'));
 });
 
 io.configure('production', function() {
