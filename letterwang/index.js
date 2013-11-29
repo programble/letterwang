@@ -1,8 +1,11 @@
 var path    = require('path'),
+    fs      = require('fs'),
     express = require('express'),
     app     = express(),
     server  = require('http').createServer(app),
-    io      = require('socket.io').listen(server);
+    io      = require('socket.io').listen(server),
+    words   = fs.readFileSync(path.join(__dirname, '..', 'data', 'words'),
+                              'utf8').trim().split('\n');
 
 if (app.get('env') != 'production') {
   app.use(express.logger());
@@ -154,7 +157,13 @@ Player.prototype = {
       this.opponent.letters = this.letters;
       this.emitLetters();
 
-      // TODO: Check for scoring
+      words.forEach(function(word) {
+        var index = this.letters.lastIndexOf(word);
+        if (index != -1 && index == this.letters.length - word.length) {
+          this.score += word.length;
+          this.emitScore(word);
+        }
+      }, this);
 
       this.turn = false;
       this.opponent.turn = true;
