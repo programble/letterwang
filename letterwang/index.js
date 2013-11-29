@@ -138,7 +138,7 @@ Player.prototype = {
 
   emitScore: function(word) {
     this.socket.emit('score', this.score, word);
-    this.opponent.socket.emit('score', this.score, word);
+    this.opponent.socket.emit('opponent score', this.score, word);
   },
 
   type: function(letter, fn) {
