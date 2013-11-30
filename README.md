@@ -1,6 +1,6 @@
 # Letterwang
 
-Competitive word-spelling game.
+Multiplayer word-spelling game.
 
 ## Rules
 
