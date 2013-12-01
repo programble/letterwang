@@ -9,15 +9,17 @@ div#wrapper {
 div#cell {
   display: table-cell;
   vertical-align: middle;
+  padding-bottom: 40px;
 }
 
 footer {
-  position: absolute;
+  position: fixed;
   left: 0;
   right: 0;
   bottom: 0;
   text-align: right;
   padding-right: 5px;
+  background-color: white;
 }
 
 #game {
