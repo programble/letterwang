@@ -160,7 +160,7 @@ Player.prototype = {
       words.forEach(function(word) {
         var index = this.letters.lastIndexOf(word);
         if (index != -1 && index == this.letters.length - word.length) {
-          this.score += word.length;
+          this.score += word.length - 2;
           this.emitScore(word);
         }
       }, this);
