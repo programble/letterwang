@@ -19,3 +19,13 @@ footer {
   text-align: right;
   padding-right: 5px;
 }
+
+#game .jumbotron {
+  margin-top: 10px;
+}
+
+#letters {
+  position: relative;
+  right: 50%;
+  text-align: right;
+}

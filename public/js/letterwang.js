@@ -60,7 +60,37 @@ $(function() {
   });
 
   socket.on('opponent id', function(id) {
-    showWait('Player found: ' + id); // TODO: Start game
+    showTab('game');
+  });
+
+  socket.on('score', function(score, word) {
+    $('#player-score').text(score);
+    $('#player-words').text(word);
+  });
+
+  socket.on('opponent score', function(score, word) {
+    $('#opponent-score').text(score);
+    $('#opponent-words').text(word);
+  });
+
+  socket.on('letters', function(letters) {
+    var $letters = $('#letters').toggleClass('invisible', !letters.length);
+    if (letters.length)
+      $letters.text(letters);
+  });
+
+  socket.on('turn', function() {
+    console.log('turn');
+  });
+
+  $(document).keypress(function(e) {
+    var letter = String.fromCharCode(e.charCode);
+    if (letter && letter >= 'a' && letter <= 'z') {
+      socket.emit('type', letter, function(err) {
+        throw err;
+      });
+      return false;
+    }
   });
 
   socket.on('opponent left', function() {
