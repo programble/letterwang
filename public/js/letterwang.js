@@ -1,13 +1,18 @@
+var waitTimeout;
+
 function showTab(id) {
+  clearTimeout(waitTimeout);
   return $('<a href="#' + id + '">').tab('show');
 }
 
 function showWait(message, cancel, link) {
-  $('#wait-message').text(message);
-  $('#wait-cancel').toggleClass('hidden', !cancel);
-  $('#wait-link').toggleClass('hidden', !link);
-  $('#wait-link a').attr('href', link).text(link);
-  return showTab('wait');
+  waitTimeout = setTimeout(function() {
+    $('#wait-message').text(message);
+    $('#wait-cancel').toggleClass('hidden', !cancel);
+    $('#wait-link').toggleClass('hidden', !link);
+    $('#wait-link a').attr('href', link).text(link);
+    showTab('wait');
+  }, 20);
 }
 
 function showError(message) {
