@@ -65,18 +65,17 @@ $(function() {
 
   socket.on('score', function(score, word) {
     $('#player-score').text(score);
-    $('#player-words').text(word);
+    if (word) $('#player-words').text(word);
   });
 
   socket.on('opponent score', function(score, word) {
     $('#opponent-score').text(score);
-    $('#opponent-words').text(word);
+    if (word) $('#opponent-words').text(word);
   });
 
   socket.on('letters', function(letters) {
     var $letters = $('#letters').toggleClass('invisible', !letters.length);
-    if (letters.length)
-      $letters.text(letters);
+    if (letters.length) $letters.text(letters);
   });
 
   socket.on('turn', function() {
