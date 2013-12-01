@@ -11,16 +11,16 @@ if (app.get('env') != 'production') {
   app.use(express.logger());
 
   app.get('/css/letterwang.min.css', function(req, res) {
-    res.redirect('/css/letterwang.css');
+    res.sendfile(path.join(__dirname, '..', 'public', 'css', 'letterwang.css'));
   });
   app.get('/js/letterwang.min.js', function(req, res) {
-    res.redirect('/js/letterwang.js');
+    res.sendfile(path.join(__dirname, '..', 'public', 'js', 'letterwang.js'));
   });
 } else {
   app.use(express.compress());
 }
 
-app.use(express.static(path.normalize(__dirname + '/../public')));
+app.use(express.static(path.join(__dirname, '..', 'public')));
 app.get('/', function(req, res) {
   res.sendfile(path.join(__dirname, '..', 'public', 'index.html'));
 });
