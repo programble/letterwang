@@ -65,12 +65,12 @@ $(function() {
 
   socket.on('score', function(score, word) {
     $('#player-score').text(score);
-    if (word) $('#player-words').text(word);
+    if (word) $('#player-words').prepend($('<ul>').text(word));
   });
 
   socket.on('opponent score', function(score, word) {
     $('#opponent-score').text(score);
-    if (word) $('#opponent-words').text(word);
+    if (word) $('#opponent-words').prepend($('<ul>').text(word));
   });
 
   socket.on('letters', function(letters) {

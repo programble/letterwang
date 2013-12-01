@@ -20,12 +20,16 @@ footer {
   padding-right: 5px;
 }
 
-#game .jumbotron {
-  margin-top: 10px;
+#game {
+  height: 100%;
 }
 
 #letters {
   position: relative;
   right: 50%;
   text-align: right;
+}
+
+#player-words ul {
+  padding-left: 0;
 }

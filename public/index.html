@@ -55,26 +55,32 @@
         </div>
 
         <div id="game" class="tab-pane fade">
-          <div class="container">
-            <div class="pull-left">
-              <h1>
-                <span id="opponent-score" class="label label-danger">0</span>
-                <small id="opponent-words"></small>
-              </h1>
-            </div>
-
-            <div class="pull-right">
-              <h1>
-                <small id="player-words"></small>
-                <span id="player-score" class="label label-success">0</span>
-              </h1>
-            </div>
-          </div>
-
           <div class="jumbotron">
             <h1 id="letters" class="invisible">
               placeholder
             </h1>
+          </div>
+
+          <div class="container">
+            <div class="row">
+              <div class="col-xs-6">
+                <h1>
+                  <span id="opponent-score" class="label label-danger">0</span>
+                </h1>
+
+                <ul id="opponent-words" class="list-unstyled text-right">
+                </ul>
+              </div>
+
+              <div class="col-xs-6">
+                <h1>
+                  <span id="player-score" class="label label-success">0</span>
+                </h1>
+
+                <ul id="player-words" class="list-unstyled text-left">
+                </ul>
+              </div>
+            </div>
           </div>
         </div>
       </div>
