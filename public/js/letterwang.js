@@ -12,7 +12,7 @@ function showWait(message, cancel, link) {
     $('#wait-link').toggleClass('hidden', !link);
     $('#wait-link a').attr('href', link).text(link);
     showTab('wait');
-  }, 20);
+  }, 100);
 }
 
 function showError(message) {
