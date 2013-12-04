@@ -74,7 +74,7 @@ $(function() {
   socket.on('opponent score', function(score, word) {
     $('#opponent-score').text(score);
     if (word)
-      $('#opponent-words').prepend($('<ul>').text(word))
+      $('#opponent-words').prepend($('<ul>').text(word));
     else
       $('#opponent-words').empty();
   });
