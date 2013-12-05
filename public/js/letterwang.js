@@ -16,8 +16,10 @@ function showWait(message, cancel, link) {
 }
 
 function showError(message) {
-  $('#error-message').text(message);
-  return showTab('error');
+  if (message) {
+    $('#error-message').text(message);
+    return showTab('error');
+  }
 }
 
 var socket, playerId;
@@ -92,7 +94,7 @@ $(function() {
     var letter = String.fromCharCode(e.charCode);
     if (letter && letter >= 'a' && letter <= 'z') {
       socket.emit('type', letter, function(err) {
-        throw err;
+        if (err) throw err;
       });
       return false;
     }

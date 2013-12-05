@@ -69,50 +69,58 @@ Player.prototype = {
   },
 
   play: function(fn) {
+    var err;
     if (this.opponent) {
-      fn('You already have an opponent');
+      err = 'You already have an opponent';
     } else if (Player.waiting && Player.waiting != this) {
       this.pair(Player.waiting);
       Player.waiting = null;
     } else {
       Player.waiting = this;
     }
+    fn(err);
   },
 
   playFriend: function(fn) {
+    var err;
     if (this.opponent)
-      fn('You already have an opponent');
+      err = 'You already have an opponent';
     else if (Player.waiting == this)
-      fn('You are already waiting for a player');
+      err = 'You are already waiting for a player';
     else
       this.waitingForFriend = true;
+    fn(err);
   },
 
   playCancel: function(fn) {
+    var err;
     if (Player.waiting == this)
       Player.waiting = null;
     else if (this.waitingForFriend)
       this.waitingForFriend = false;
     else
-      fn('You are not waiting to play');
+      err = 'You are not waiting to play';
+    fn(err);
   },
 
   playId: function(id, fn) {
-    var other = Player.players[id];
+    var other = Player.players[id],
+        err;
     if (this.opponent) {
-      fn('You already have an opponent');
+      err = 'You already have an opponent';
     } else if (other == this) {
-      fn('You cannot play yourself');
+      err = 'You cannot play yourself';
     } else if (other && other.opponent) {
-      fn('Player already has an opponent');
+      err = 'Player already has an opponent';
     } else if (other && other.waitingForFriend) {
       other.waitingForFriend = false;
       this.pair(other);
     } else if (other) {
-      fn('Player is not waiting for a friend');
+      err = 'Player is not waiting for a friend';
     } else {
-      fn('Player not found');
+      err = 'Player not found';
     }
+    fn(err);
   },
 
   pair: function(other) {
@@ -145,13 +153,14 @@ Player.prototype = {
   },
 
   type: function(letter, fn) {
+    var err;
     if (!this.opponent)
-      fn('You are not playing');
+      err = 'You are not playing';
     else if (!this.turn)
-      fn('It is not your turn');
+      err = 'It is not your turn';
     else if (typeof letter != 'string' || letter.length != 1 ||
              letter < 'a' || letter > 'z')
-      fn('Invalid letter');
+      err = 'Invalid letter';
     else {
       this.letters = (this.letters + letter).slice(-50);
       this.opponent.letters = this.letters;
@@ -169,6 +178,7 @@ Player.prototype = {
       this.opponent.turn = true;
       this.opponent.socket.emit('turn');
     }
+    fn(err);
   }
 };
 
