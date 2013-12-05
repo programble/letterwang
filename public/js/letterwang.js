@@ -22,7 +22,7 @@ function showError(message) {
   }
 }
 
-var socket, playerId;
+var socket, playerId, turn;
 
 $(function() {
   socket = io.connect();
@@ -87,14 +87,18 @@ $(function() {
   });
 
   socket.on('turn', function() {
-    console.log('turn');
+    turn = true;
   });
 
   $(document).keypress(function(e) {
+    if (!turn) return true;
     var letter = String.fromCharCode(e.charCode);
     if (letter && letter >= 'a' && letter <= 'z') {
       socket.emit('type', letter, function(err) {
-        if (err) throw err;
+        if (err)
+          throw err;
+        else
+          turn = false;
       });
       return false;
     }
