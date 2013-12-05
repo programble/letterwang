@@ -88,6 +88,7 @@ $(function() {
 
   socket.on('turn', function() {
     turn = true;
+    document.title = 'Letterwang! (Your turn)';
   });
 
   $(document).keypress(function(e) {
@@ -97,8 +98,10 @@ $(function() {
       socket.emit('type', letter, function(err) {
         if (err)
           throw err;
-        else
+        else {
           turn = false;
+          document.title = 'Letterwang!';
+        }
       });
       return false;
     }
