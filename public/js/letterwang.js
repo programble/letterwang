@@ -1,7 +1,15 @@
 var waitTimeout;
 
+function setTitle(title) {
+  if (title)
+    document.title = title;
+  else
+    document.title = 'Letterwang!';
+}
+
 function showTab(id) {
   clearTimeout(waitTimeout);
+  setTitle();
   return $('<a href="#' + id + '">').tab('show');
 }
 
@@ -88,7 +96,7 @@ $(function() {
 
   socket.on('turn', function() {
     turn = true;
-    document.title = 'Letterwang! (Your turn)';
+    setTitle('Letterwang! (Your turn)');
   });
 
   $(document).keypress(function(e) {
@@ -100,7 +108,7 @@ $(function() {
           throw err;
         else {
           turn = false;
-          document.title = 'Letterwang!';
+          setTitle();
         }
       });
       return false;
