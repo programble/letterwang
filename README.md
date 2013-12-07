@@ -48,8 +48,10 @@ NODE_ENV=production node app.js
 To deploy to Heroku:
 
 ```
+heroku labs:enable websockets
 heroku config:set NODE_ENV=production
 heroku config:set BUILDPACK_URL=https://github.com/mbuchetics/heroku-buildpack-nodejs-grunt.git
+heroku labs:enable user-env-compile
 ```
 
 ## License
