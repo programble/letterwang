@@ -54,17 +54,6 @@ Player.emitCount = function() {
 };
 
 Player.prototype = {
-  remove: function() {
-    if (Player.waiting == this)
-      Player.waiting = null;
-    if (this.opponent) {
-      this.opponent.socket.emit('opponent left');
-      this.opponent.opponent = null;
-    }
-    delete Player.players[this.id];
-    Player.emitCount();
-  },
-
   play: function(fn) {
     var err;
     if (this.opponent) {
@@ -176,6 +165,26 @@ Player.prototype = {
       this.opponent.socket.emit('turn');
     }
     fn(err);
+  },
+
+  leave: function(fn) {
+    if (!this.opponent) {
+      fn('You are not playing');
+    } else {
+      this.opponent.socket.emit('opponent left');
+      this.opponent.opponent = null;
+      this.opponent = null;
+      fn();
+    }
+  },
+
+  remove: function() {
+    if (Player.waiting == this)
+      Player.waiting = null;
+    if (this.opponent)
+      this.leave(safe());
+    delete Player.players[this.id];
+    Player.emitCount();
   }
 };
 
@@ -186,6 +195,7 @@ io.sockets.on('connection', function(socket) {
   socket.on('play cancel', function(fn)     { player.playCancel(safe(fn)); });
   socket.on('play id',     function(id, fn) { player.playId(id, safe(fn)); });
   socket.on('type',        function(l, fn)  { player.type(l, safe(fn)); });
+  socket.on('leave',       function(fn)     { player.leave(safe(fn)); });
   socket.on('disconnect',  function()       { player.remove(); });
 });
 

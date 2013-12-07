@@ -55,6 +55,40 @@
         </div>
 
         <div id="game" class="tab-pane fade">
+          <div class="pull-right">
+            <button type="button" id="leave" class="btn btn-sm btn-default"
+                    data-toggle="modal" data-target="#leave-modal">
+              <i class="fa fa-times"></i>
+            </button>
+          </div>
+
+          <div id="leave-modal" class="modal fade text-left">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal">
+                    <i class="fa fa-times"></i>
+                  </button>
+                  <h4 class="modal-title">Leave game</h4>
+                </div>
+                <div class="modal-body">
+                  <p>Are you sure you want to leave the game?</p>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-default"
+                          data-dismiss="modal">
+                    Cancel
+                  </button>
+                  <button type="button" id="leave-confirm"
+                          class="btn btn-danger" data-dismiss="modal">
+                    Leave
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
           <div class="jumbotron">
             <h1 id="letters" class="invisible">
               placeholder

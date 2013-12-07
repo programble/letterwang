@@ -25,6 +25,11 @@ footer {
   height: 100%;
 }
 
+#leave {
+  margin-top: 10px;
+  margin-right: 10px;
+}
+
 #letters {
   position: relative;
   right: 50%;

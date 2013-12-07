@@ -105,7 +105,7 @@ $(function() {
     if (letter && letter >= 'a' && letter <= 'z') {
       socket.emit('type', letter, function(err) {
         if (err)
-          throw err;
+          throw err; // TODO: Display error
         else {
           turn = false;
           setTitle();
@@ -113,6 +113,15 @@ $(function() {
       });
       return false;
     }
+  });
+
+  $('#leave-confirm').click(function() {
+    socket.emit('leave', function(err) {
+      if (err)
+        showError(err);
+      else
+        showTab('menu');
+    });
   });
 
   socket.on('opponent left', function() {
