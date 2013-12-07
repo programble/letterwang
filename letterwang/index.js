@@ -21,9 +21,6 @@ if (app.get('env') != 'production') {
 }
 
 app.use(express.static(path.join(__dirname, '..', 'public')));
-app.get('/', function(req, res) {
-  res.sendfile(path.join(__dirname, '..', 'public', 'index.html'));
-});
 
 io.configure('production', function() {
   io.enable('browser client minification');
