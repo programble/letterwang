@@ -16,18 +16,40 @@ Player 1: l
 Player 2: a
 Player 1: t
 Player 2: e
-Player 2 is awarded 4 points (late)
+Player 2 is awarded 2 points (late)
 Player 1: r
-Player 1 is awarded 5 points (later)
+Player 1 is awarded 3 points (later)
 Player 2: a
 Player 1: l
-Player 1 is awarded 7 points (lateral)
+Player 1 is awarded 5 points (lateral)
 Player 2: l
-Player 2 is awarded 3 points (all)
+Player 2 is awarded 1 points (all)
 Player 1: y
-Player 1 is awarded 9 points (laterally)
-Player 1 is awarded 5 points (rally)
-Player 1 is awarded 4 points (ally)
+Player 1 is awarded 7 points (laterally)
+Player 1 is awarded 3 points (rally)
+Player 1 is awarded 2 points (ally)
+```
+
+## Setup
+
+```
+npm install -g grunt-cli
+npm install
+node app.js
+```
+
+To run in production:
+
+```
+grunt cssmin uglify
+NODE_ENV=production node app.js
+```
+
+To deploy to Heroku:
+
+```
+heroku config:set NODE_ENV=production
+heroku config:set BUILDPACK_URL=https://github.com/mbuchetics/heroku-buildpack-nodejs-grunt.git
 ```
 
 ## License
