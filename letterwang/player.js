@@ -13,11 +13,18 @@ function safe(fn) {
 module.exports = function(io) {
   function Player(socket) {
     this.socket = socket;
-    this.id = Player.nextId.toString(36);
+
+    var id = Player.nextId;
     Player.nextId++;
+
+    this.id = (id + 9999999).toString(36);
     Player.players[this.id] = this;
     Player.emitCount();
     socket.emit('id', this.id);
+
+    this.name = Player.nextName[0] + ' ' + id;
+    Player.nextName.push(Player.nextName.shift());
+    socket.emit('name', this.name);
 
     var $this = this;
     socket.on('play',        function(fn)     { $this.play(safe(fn));       });
@@ -29,8 +36,9 @@ module.exports = function(io) {
     socket.on('disconnect',  function()       { $this.remove();             });
   }
 
-  Player.nextId = 10000000;
   Player.players = {};
+  Player.nextId = 1;
+  Player.nextName = ['Julie', 'Simon'];
 
   Player.emitCount = function() {
     io.sockets.emit('players', Object.keys(Player.players).length);
