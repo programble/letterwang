@@ -27,6 +27,7 @@ module.exports = function(io) {
     socket.emit('name', this.name);
 
     var $this = this;
+    socket.on('name',        function(n, fn)  { $this.rename(n, safe(fn));  });
     socket.on('play',        function(fn)     { $this.play(safe(fn));       });
     socket.on('play friend', function(fn)     { $this.playFriend(safe(fn)); });
     socket.on('play cancel', function(fn)     { $this.playCancel(safe(fn)); });
@@ -45,6 +46,12 @@ module.exports = function(io) {
   };
 
   Player.prototype = {
+    rename: function(name, fn) {
+      this.name = name;
+      if (this.opponent)
+        this.opponent.socket.emit('opponent name', name);
+    },
+
     play: function(fn) {
       var err;
       if (this.opponent) {
@@ -104,7 +111,9 @@ module.exports = function(io) {
       this.opponent = other;
       other.opponent = this;
       this.socket.emit('opponent id', other.id);
+      this.socket.emit('opponent name', other.name);
       other.socket.emit('opponent id', this.id);
+      other.socket.emit('opponent name', this.name);
 
       this.letters = other.letters = '';
       this.emitLetters();
