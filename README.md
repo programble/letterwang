@@ -32,25 +32,18 @@ Player 1 is awarded 2 points (ally)
 
 ## Setup
 
-```
-npm install -g grunt-cli
+```sh
 npm install
+# Development
 node app.js
-```
-
-To run in production:
-
-```
-grunt cssmin uglify
+# Production
 NODE_ENV=production node app.js
 ```
 
 To deploy to Heroku:
 
-```
+```sh
 heroku labs:enable websockets
-heroku labs:enable user-env-compile
-heroku config:set BUILDPACK_URL=https://github.com/mbuchetics/heroku-buildpack-nodejs-grunt.git
 heroku config:set NODE_ENV=production
 ```
 

@@ -29,7 +29,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-uglify');
 
   grunt.registerTask('default', 'jshint');
-  grunt.registerTask('heroku:production', ['cssmin', 'uglify']);
+  grunt.registerTask('postinstall', ['cssmin', 'uglify']);
 
   grunt.registerTask('words', 'Generate word list', function() {
     var words = [];
